@@ -1,12 +1,12 @@
 {
   "/api": {
-    "target": "https://echotst.jsi.com",
+    "target": "https://demo.url.com",
     "secure": "false",
     "auth": "username:password",
     "changeOrigin": "true"
   },
   "/": {
-    "target": "https://echotst.jsi.com",
+    "target": "https://demo.url.com",
     "secure": "false",
     "auth": "username:password",
     "changeOrigin": "true"
