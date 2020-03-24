@@ -24,12 +24,18 @@
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/manifest.webapp"
             ],
             "styles": [
-              "src/styles.scss"
+              "node_modules/jqwidgets-ng/jqwidgets/styles/jqx.base.css",
+              "src/styles.scss",
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css"
             ],
-            "scripts": [],
+            "scripts": [
+              "./node_modules/file-saver/dist/FileSaver.min.js",
+              "./node_modules/jquery/dist/jquery.js"
+            ],
             "es5BrowserSupport": true
           },
           "configurations": {
@@ -52,7 +58,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",
+                  "maximumWarning": "4mb",
                   "maximumError": "5mb"
                 }
               ]

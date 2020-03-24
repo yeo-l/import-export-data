@@ -1,24 +1,23 @@
 {
-    name: 'Datim Export Import';
-    version: 1.0;
-    description: 'Description';
-    launch_path: string;
-    appType: string;
-    icons: {
-      16: string;
-      48: string;
-      128: string;
-    };
-    developer: {
-      name: string;
-      url: string;
-    };
-    default_locale: string;
-    activities: {
-    dhis: {
-      href: string;
-      namespace: string;
-      };
-    };
-    authorities: Array<string>;
+    "version": "0.1",
+    "name": "Echo import export data",
+    "description": "This app allows import Excel template data nd export periodic data in excel file",
+    "launch_path": "index.html",
+    "language": "en",
+    "appType": "APP",
+    "icons": {
+        "16": "assets/icon-echo.png",
+        "48": "assets/icon-echo.png",
+        "128": "assets/icon-echo.png"
+    },
+    "developer": {
+        "name": "HISP-CI",
+        "url": "http://hispci.org"
+    },
+    "default_locale": "en",
+    "activities": {
+        "dhis": {
+            "href": "../../../../"
+        }
+    }
 }

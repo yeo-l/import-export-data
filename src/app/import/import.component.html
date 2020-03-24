@@ -1,36 +1,211 @@
+<div class="row">
+  <div class="alert alert-warning" *ngIf="showMsg">
+    {{errorMessage}}
+  </div>
+  <div class="col-md-5">
+    <form>
+      <div class="card">
+        <div class="card-body">
+          <div class="form-group">
+            <div class="form-control"
+                 *ngIf="loadingMetadata || loadingMappingZm"
+                 [ngClass]="{'alert-warning': loadingMetadata || loadingMappingZm}">
+              <span>
+                <img
+                src="assets/35.gif"
+                alt="load icon" width="20px" height="20px" class="mr-2">
+                Loading DataSet and linked information
+              </span>
+            </div>
+            <div class="form-control"
+                 *ngIf="!loadingMetadata && !loadingMappingZm"
+                 [ngClass]="{'alert-success': !loadingMetadata && !loadingMappingZm}">
+              <span>{{dataSets[0].name}}</span>
+            </div>
+<!--            <select class="form-control col-sm-12 mb-2" name="dsName" id="dataSet" (change)="selectDataSet($event)" [(ngModel)]="dataSetId">-->
+<!--              <option [ngValue]="null">&#45;&#45; Select DataSet &#45;&#45;</option>-->
+<!--&lt;!&ndash;              <option [ngValue]="dataSet.id" value="{{dataSet.id}}" *ngFor="let dataSet of dataSets"> {{dataSet.name}}</option>&ndash;&gt;-->
+<!--              <option [ngValue]="dataSet.id" value="{{dataSet.id}}" *ngFor="let dataSet of dataSets"> {{dataSet.name}}</option>-->
+<!--            </select>-->
+          </div>
+          <div class="form-group">
+            <div class="custom-file col-md-12">
+              <input [attr.disabled]="!loadingMetadata && !loadingMappingZm ? null : ''" type="file" name="files[]" multiple id="jsonFile" accept=".xlsx" (change)="onExcelFileChange($event)" [(ngModel)]="excelFile" />
+              <label class="custom-file-label text-truncate" for="jsonFile">Choose the Excel template</label>
+            </div>
+            <div class="alert alert-dark mt-0 p-1" *ngIf="filename">
+              {{ filename }}
+            </div>
+          </div>
+          <div class="form-group" *ngIf="sheetNames.length !== 0">
+            <div class="input-group">
+              <label for="sheet"></label>
+              <select name="sheetName" [(ngModel)]="sheetName" id="sheet" class="form-control" (change)="onSheetChange($event)">
+                <option [ngValue]="null">-- Select imported Sheet --</option>
+                <option [ngValue]="sn" value="{{sn}}" *ngFor="let sn of sheetNames" >{{sn}}</option>
+              </select>
+              <div class="input-group-append">
+                <button class="input-group-text bg-primary text-light" (click)="prepareData()"> Click to Show </button>
+              </div>
+            </div>
+          </div>
+          <div class="alert alert-warning" *ngIf="templateError">
+            <h5>Template Errors</h5>
+            <p>{{templateError}}</p>
+          </div>
+          <div class="card">
+            <div class="card-body" *ngIf="totalToImport !== 0">
+              <div class="alert alert-info" role="alert" *ngIf="!preparing">
+                <h4 class="alert-heading">{{ countries }}</h4>
+                <hr class="mt-1 mb-1">
+                <div class="row">
+                  <div class="col-5">Mechanism ID(s)</div>
+                  <div class="col-7">{{ mechanisms }}</div>
+                </div>
+                <hr class="mt-1 mb-1">
+                <div class="row">
+                  <div class="col-5">Period(s)</div>
+                  <div class="col-7">{{ dataPerPeriods }}</div>
+                </div>
+                <hr class="mt-1 mb-1">
+                <div class="row">
+                  <div class="col-5">Total Data (forms) </div>
+                  <div class="col-7">{{ totalToImport }} ({{totalDataSet}})</div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 align-self-start mb-3">
+                  <!-- *ngIf="progress === 0 || progress === 100 || !importing"-->
+                  <button type="button" [attr.disabled]="importing || !canImport ? '' : null" class="btn btn-success" (click)="importData()">Import data</button>
+<!--                  <button type="button" [attr.disabled]="importing ? '' : null" class="btn btn-success" (click)="importData()">Import data</button>-->
+                  <button type="reset" [attr.disabled]="importing ? '' : null" class="btn btn-dark ml-2" (click)="clearAll()">CLear All</button>
+                </div>
+                <div class="col-md-12">
+                  <div class="progress mb-1 status-progress-bar" style="height: 1px;">
+                    <div class="progress-bar" role="progressbar" [ngStyle]="{'width.%':progress}" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                  <div class="progress" style="height: 30px;">
+                    <div class="progress-bar status-progress-bar" [ngStyle]="{'width.%':progress}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar-count mt-1">{{progress}}%</div>
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-2">
+                <div class="col-md-12">
+                  <div class="alert alert-danger" *ngIf="orgUnitError.length !== 0">
+                    <h5>Organization Units Errors</h5>
+                    <div style="max-height: 200px; font-size: 11px; overflow-x: auto">
+                    <p *ngFor="let ms of orgUnitError">{{ms}}</p>
+                    </div>
+                  </div>
+                  <div class="alert alert-danger" *ngIf="dataElementError.length !== 0">
+                    <h5>Data Elements Errors</h5>
+                    <div style="max-height: 200px; font-size: 11px; overflow-x: auto">
+                    <p *ngFor="let ms of dataElementError">{{ms}}</p>
+                    </div>
+                  </div>
+                  <div class="alert alert-danger" *ngIf="categoryOptionComboError.length !== 0">
+                    <h5>Category Option Combo Errors</h5>
+                    <div style="max-height: 200px; font-size: 11px; overflow-x: auto">
+                    <p *ngFor="let ms of categoryOptionComboError">{{ms}}</p>
+                    </div>
+                  </div>
+                  <div class="alert alert-danger" *ngIf="attributeOptionError.length !== 0">
+                    <h5>Mechanism ID Errors</h5>
+                    <div style="max-height: 200px; font-size: 11px; overflow-x: auto">
+                    <p *ngFor="let ms of attributeOptionError">{{ms}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body" style="overflow: auto; min-height: 300px">
+        <div class="alert alert-info">
+<!--          <div class="row" *ngIf="currentMessage === null">-->
+          <div class="row">
+            <div class="col-12" *ngIf="!importing">---</div>
+            <div class="col-2">
+              <img src="assets/rounded-color.gif" alt="loading" height="20px" width="20px" *ngIf="showLoading">
+            </div>
+            <div class="col-10" *ngIf="importing">
+              {{ currentMessage }}s
+            </div>
+          </div>
+        </div>
+        <h5>Import Summary</h5>
+        <div class="alert alert-primary">
+          <div class="row align-items-center">
+            <div class="col-6"><h6>Imported : </h6></div>
+            <div class="col-6 text-right"><h6>{{importedCount}}</h6></div>
+          </div>
+          <div class="row align-items-center">
+            <div class="col-6"><h6>Updated : </h6></div>
+            <div class="col-6 text-right"><h6>{{updatedCount}}</h6></div>
+          </div>
+          <div class="row align-items-center">
+            <div class="col-6"><h6>Deleted : </h6></div>
+            <div class="col-6 text-right"><h6>{{deletedCount}}</h6></div>
+          </div>
+          <div class="row align-items-center text-danger">
+            <div class="col-6"><h6>Ignored : </h6></div>
+            <div class="col-6 text-right"><h6>{{ignoredCount}}</h6></div>
+          </div>
+        </div>
+        <div class="alert alert-warning">
+          <div class="row align-items-center">
+            <div class="col-6"><h6>Total : </h6></div>
+            <div class="col-6 text-right"><h5>{{importedCount + ignoredCount + deletedCount + updatedCount}}</h5></div>
+          </div>
+        </div>
+        <hr>
+        <h5>Completeness Summary</h5>
+        <div class="alert alert-primary">
+            <div class="row align-items-center">
+              <div class="col-6"><h6>Imported : </h6></div>
+              <div class="col-6 text-right"><h6>{{completenessImportedCount}}</h6></div>
+            </div>
+            <div class="row align-items-center">
+              <div class="col-6"><h6>Updated : </h6></div>
+              <div class="col-6 text-right"><h6>{{completenessUpdatedCount}}</h6></div>
+            </div>
+            <div class="row align-items-center">
+              <div class="col-6"><h6>Deleted : </h6></div>
+              <div class="col-6 text-right"><h6>{{completenessDeletedCount}}</h6></div>
+            </div>
+            <div class="row align-items-center text-danger">
+              <div class="col-6"><h6>Ignored : </h6></div>
+              <div class="col-6 text-right"><h6>{{completenessIgnoredCount}}</h6></div>
+            </div>
+        </div>
+      </div>
 
-<fieldset>
-  <legend>Data import form</legend>
-  <div class="form-group row ml-1">
-    <div class="custom-file col-md-5">
-      <input type="file" name="files[]" multiple id="jsonFile" accept=".xlsx" (change)="onExcelFileChange($event)  " />
-      <label class="custom-file-label text-truncate" for="jsonFile">Choose your Excel file</label>
-    </div>
-    <div class="col-md-3">
-      <button type="button" class="btn btn-primary"><i class="fa fa-upload"></i> Import data</button>
     </div>
   </div>
-</fieldset>
-<hr>
-<fieldset>
-  <legend>Import results</legend>
-  <div class="alert alert-info" style="min-height: 300px">
-    <div *ngIf="excelData != null">
-      <p>Number of columns : {{maxColumnCount}}</p>
-      <p>Number of rows : {{maxRowCount}}</p>
-      <table class="table table-striped table-hover table-sm" >
-        <tr *ngFor="let excel of excelData">
-          <td *ngFor="let d of excel">
-            {{ d}}
-          </td>
-        </tr>
-      </table>
-      <!--{{excelData}}-->
+  <div class="col-md-4" *ngIf="totalDataSetNotImported !== 0">
+    <div class="card">
+      <div class="card-body">
+
+        <div class="alert alert-danger">
+          <h4>Forms not imported : {{totalDataSetNotImported}}/{{totalDataSet}}</h4>
+          <div style="max-height: 250px; font-size: 11px; overflow-x: auto">
+            <p *ngFor="let err of resultErrors">
+              <span *ngIf="err.value !== null">
+                {{err.value}} ({{err.object}})
+              </span>
+              <span *ngIf="err.value === null">
+                {{err.description}}
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</fieldset>
-<!--<gc-spread-sheets [hostStyle]="hostStyle" (workbookInitialized)="workbookInit($event)"></gc-spread-sheets>-->
-<!--<div class='exportExcel'>-->
-<!--<p>Save Excel File</p>-->
-<!--<button (click)="onClickMe($event)">Save Excel!</button>-->
-<!--</div>-->
+</div>

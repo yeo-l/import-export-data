@@ -1,3 +1,141 @@
-<p>
-  export works!
-</p>
+<div class="alert alert-primary">
+  <form class="form-inline">
+
+<!--    <div class="form-group">-->
+<!--      <div class="form-check mr-3">-->
+<!--        <input class="form-check-input" type="checkbox" id="autoSizingCheck" value="{{multipleWeek}}" name="multipleWeeks" [(ngModel)]="multipleWeek" (click)="multiple()">-->
+<!--        <label class="form-check-label" for="autoSizingCheck">-->
+<!--          Multiple-->
+<!--        </label>-->
+<!--      </div>-->
+<!--    </div>-->
+
+    <div class="form-group">
+      <div class="input-group">
+        <label class="" for="lastPeriod">Select latest week of month : </label>
+        <div class="input-group-prepend ml-1">
+          <button class="input-group-text btn btn-primary" (click)="getPreviousYearWeeksForFirstPeriod()"> << </button>
+<!--          <button class="input-group-text btn btn-primary" (click)="removeOneWeekToFirst()"> < </button>-->
+        </div>
+        <select name="first" id="lastPeriod" class="form-control" [(ngModel)]="firstPeriod">
+          <option value="{{week.value}}" *ngFor="let week of firstPeriodWeekList">{{week.label}}</option>
+        </select>
+        <div class="input-group-append">
+          <button class="input-group-text btn btn-primary" (click)="getNextYearWeeksForFirstPeriod()"> >> </button>
+        </div>
+      </div>
+    </div>
+<!--    <div class="form-group ml-2" *ngIf="multipleWeek">-->
+<!--      <div class="input-group">-->
+<!--        <label class="" for="lastPeriod">To</label>-->
+<!--        <div class="input-group-prepend ml-2">-->
+<!--          <button class="input-group-text btn btn-primary" (click)="getPreviousYearWeeksForLastPeriod()"> << </button>-->
+<!--        </div>-->
+<!--        <select name="lastPeriod" id="lastPeriod" class="form-control" [(ngModel)]="lastPeriod">-->
+<!--          <option value="{{week.value}}" *ngFor="let week of lastPeriodWeekList">{{week.label}}</option>-->
+<!--        </select>-->
+<!--        <div class="input-group-append">-->
+<!--          <button class="input-group-text btn btn-primary" (click)="getNextYearWeeksForLastPeriod()"> >> </button>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <div class="form-group ml-2">-->
+<!--      <div class="input-group">-->
+<!--        <select name="ou" id="ou">-->
+<!--          <option value="all">All Countries</option>-->
+<!--          <option value="" *ngFor="let ou of countries">{{ ou}}</option>-->
+<!--        </select>-->
+<!--      </div>-->
+<!--    </div>-->
+
+    <!--<div class="form-group">
+      <label class="" for="year">Weeks From : </label>
+      <div class="input-group ml-2">
+        <div class="input-group-prepend">
+          <button class="input-group-text btn btn-primary" (click)="removeOneYear()">-</button>
+        </div>
+        <input type="text" class="form-control text-center" name="year" value="{{selectedFirstYear}}" [(ngModel)]="selectedFirstYear" id="year" size="4">
+        <div class="input-group-append">
+          <button class="input-group-text btn btn-primary" (click)="addOneYear()">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="form-group ml-0">
+      <label class="sr-only" for="firstWeek">Weeks From : </label>
+      <div class="input-group ml-2">
+        <div class="input-group-prepend">
+          <button class="input-group-text btn btn-primary" (click)="removeOneWeekToFirst()">-</button>
+        </div>
+        <input type="text" class="form-control text-center" name="firstWeek" value="{{selectedFirstWeek}}" [(ngModel)]="selectedFirstWeek" id="firstWeek" size="2">
+        <div class="input-group-append">
+          <button class="input-group-text btn btn-primary" (click)="addOneWeekToFirst()">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="form-group ml-5">
+      <div class="form-group">
+        <label class="" for="year">To : </label>
+        <div class="input-group ml-2">
+          <div class="input-group-prepend">
+            <button class="input-group-text btn btn-primary" (click)="removeOneYear()">-</button>
+          </div>
+          <input type="text" class="form-control text-center" name="year" value="{{selectedFirstYear}}" [(ngModel)]="selectedFirstYear" id="lastWeekYear" size="4">
+          <div class="input-group-append">
+            <button class="input-group-text btn btn-primary" (click)="addOneYear()">+</button>
+            <button class="input-group-text btn btn-primary" (click)="addOneYear()">++</button>
+          </div>
+        </div>
+      </div>
+      <label class="sr-only" for="lastWeek"> To : </label>
+      <div class="input-group ml-2">
+        <div class="input-group-prepend">
+          <button class="input-group-text btn btn-primary" (click)="removeOneWeekToLast()">-</button>
+        </div>
+        <input type="text" class="form-control text-center" name="lastWeek" value="{{selectedLastWeek}}" [(ngModel)]="selectedLastWeek" id="lastWeek" size="2">
+        <div class="input-group-append">
+          <button class="input-group-text btn btn-primary" (click)="addOneWeekToLast()">+</button>
+        </div>
+      </div>
+    </div>-->
+    <button type="submit"  [attr.disabled]="!loadingMetadata && !loadingCountryLasLevel && !loadingMapping && !loadingGetAllCountries ? null : ''" class="btn btn-primary ml-5" (click)="showData();">Show Data</button>
+    <div class="col-4" *ngIf="loadingMetadata || loadingCountryLasLevel || loadingMapping || loadingGetAllCountries">
+      Loading necessary information
+    </div>
+
+  </form>
+
+</div>
+<div class="card">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-6 align-content-end">
+        <div class="btn-group" *ngIf="dataValues.length !== 0">
+          <button class="btn btn-primary" (click)="exportAsExcelFile()">
+            <i class="fa fa-file-excel" aria-hidden="true"></i> Export Excel
+          </button>
+          <button class="btn btn-primary" (click)="csvExport()"><i class="fa fa-file-csv"></i> Export CSV</button>
+        </div>
+      </div>
+      <div class="col-6"></div>
+    </div>
+  </div>
+  <div class="card-body" style="min-height: 300px;">
+
+    <div style="text-align: center;line-height: 300px;" *ngIf="loading">
+      <p style="line-height: 1.5; display: inline-block; vertical-align: middle;"><img src="assets/103-no-bg.gif" alt=""></p>
+    </div>
+
+    <div style="text-align: center;line-height: 300px;" *ngIf="dataValues.length === 0 && loading === false">
+      <p style="line-height: 1.5; display: inline-block; vertical-align: middle;">No result</p>
+    </div>
+
+    <jqxDataTable #myDataTable *ngIf="dataValues.length !== 0"
+                  [width]="getWidth()" [source]="dataAdapter" [columns]="columns" [showToolbar]="false"
+                  [altRows]="true" [pageable]="true" [pageSize]="10" [sortable]="true" [columnsResize]="true"
+                  [autoRowHeight]="true" [filterable]="true" [columnsReorder]="true">
+    </jqxDataTable>
+
+  </div>
+</div>
+

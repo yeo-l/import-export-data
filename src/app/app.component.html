@@ -1,20 +1,29 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<!--<ngx-dhis2-menu></ngx-dhis2-menu>-->
-
-<div style="margin-top: 70px; padding: 5px">
-  <div class='container-fluid'>
-      <ul class="nav nav-tabs mb-1">
-        <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="['/visualization']">Visualisation des données</a>
-        </li>
-        <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="['/data-import']">Importation des données</a>
-        </li>
-        <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="['/data-export']">Exportation des données</a>
-        </li>
-      </ul>
-      <router-outlet></router-outlet>
+<ngx-dhis2-menu></ngx-dhis2-menu>
+<div class="bg-light" style="position: absolute; width: 100%; top: 45px; z-index: 999; border-bottom: 1px solid #cccccc">
+  <table class="table table-borderless bg-light mb-0">
+    <tr>
+      <td class="align-items-start align-middle"><h5 class="mb-0">OHA HFR - DATIM - <span class="text-primary">{{title | uppercase}}</span></h5></td>
+      <td class="text-right">
+        <a class="btn" [ngClass]="{'btn-info':title === 'Data Import'}" [routerLink]="['/data-import']">Data Import</a>
+        <a class="btn" [ngClass]="{'btn-info':title === 'Data Export'}" [routerLink]="['/data-export']">Data Export</a>
+      </td>
+    </tr>
+  </table>
+</div>
+<div style="margin-top: 100px;">
+  <div class='container-fluid pt-2'>
+    <!--      <ul class="nav nav-tabs mb-1">-->
+    <!--        <li class="nav-item" routerLinkActive="active">-->
+    <!--          <a class="nav-link" [routerLink]="['/visualization']">Visualisation des données</a>-->
+    <!--        </li>-->
+    <!--        <li class="nav-item" routerLinkActive="active">-->
+    <!--          <a class="nav-link" [routerLink]="['/data-import']">Importation des données</a>-->
+    <!--        </li>-->
+    <!--        <li class="nav-item" routerLinkActive="active">-->
+    <!--          <a class="nav-link" [routerLink]="['/data-export']">Exportation des données</a>-->
+    <!--        </li>-->
+    <!--      </ul>-->
+    <router-outlet></router-outlet>
   </div>
 </div>
-
