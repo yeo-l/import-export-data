@@ -1,0 +1,14 @@
+{
+  "/api": {
+    "target": "https://echo.jsi.com",
+    "secure": "false",
+    "auth": "bogui:P@come01",
+    "changeOrigin": "true"
+  },
+  "/": {
+    "target": "https://echo.jsi.com",
+    "secure": "false",
+    "auth": "bogui:P@come01",
+    "changeOrigin": "true"
+  }
+}
